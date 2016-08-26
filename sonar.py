@@ -40,6 +40,4 @@ def TestSonar ():
       print "left" , str(getDistance(18, 22))
       print "Mid" , str(getDistance(8, 8))
       print "right" , str(getDistance(12, 13))
-      time.sleep(1)
-                        
-                         
+      time.sleep(1)                         
