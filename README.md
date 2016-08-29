@@ -10,3 +10,7 @@ In the event of no other pairs wanting to joust, we might create a robot that ca
 
 
 We need help and guidance in choosing a project from one of the above. 
+
+Wtih input from Diba we have finally decided on what our project will be. We will be doing an obstacle avoiding and image recognizing robot.
+
+Although not particularly smooth, we have a robot that is capable going through a simple course wich wil avoid walls and other objects. One thing that we have to work on is adding a piece of code that  will aid the robot when its stuck in a "funnel," aka blocked on all sides. After that, we will move on to image processing and make the camera recognize colors and react to each in a specific manner. 
