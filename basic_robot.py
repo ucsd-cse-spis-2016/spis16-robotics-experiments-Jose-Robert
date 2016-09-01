@@ -19,17 +19,16 @@ def OAS(Mid_threshold, Side_threshold):
     distL = getDistance(18,22)
     distM = getDistance(8,8)
     distR = getDistance(12,13)
-
     while ((distL >  Side_threshold) and (distM > Mid_threshold) and (distR > Side_threshold)):
         forward (40)
-        print "moving forward"
+       # print "moving forward"
         distL = getDistance(18,22)
         distM = getDistance(8,8)
         distR = getDistance(12,13) 
         
-        print distL
-        print distM
-        print distR
+       # print distL
+       # print distM
+      #  print distR
     else:
         while (distL < Side_threshold):
             turnRight(distL, Side_threshold)
@@ -60,16 +59,16 @@ def OAS(Mid_threshold, Side_threshold):
         #       distM = getDistance(8,8)	
 
 def turnRight (distL, Side_threshold):
-    turn(5,50)
+    turn(0,50)
     time.sleep(.25)
     stopall()
-    print "moving right"         
+    #print "moving right"         
 
 def turnLeft (distR, Side_threshold):
-    turn(50, 5)
+    turn(50, 0)
     time.sleep(.25)
     stopall()
-    print "moving left" 
+    #print "moving left" 
        	
 
 try:

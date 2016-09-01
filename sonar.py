@@ -42,3 +42,5 @@ def TestSonar ():
       print "right" , str(getDistance(12, 13))
       time.sleep(1)                         
 
+#TestSonar()
+
