@@ -69,7 +69,7 @@ try:
 
     while (True):
         distM = getDistance(8,8)
-        if (state == 0 and distM < M):
+        if (state == 0 and distM < 5):
 	    OAS(M,S)
             state = 1
         elif (state == 0):
