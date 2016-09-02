@@ -8,14 +8,12 @@ import RPi.GPIO as GPIO
 import time
 from mysonar import *
 from motor import *
-import cv2
-import picamera
-import picamera.array
 import time
+from ourballdetection import *
 
 #use physical pin numbering
 GPIO.setmode(GPIO.BOARD)
-
+counter = -1
 # main loop
 #counter = -1 
 def OAS(Mid_threshold, Side_Min):
@@ -31,15 +29,17 @@ def OAS(Mid_threshold, Side_Min):
 
         if (distL < Side_Min):
             turnRight(.25)
-	# was .25 
+    # was .25 
             print "turn right"
         elif (distR < Side_Min):
             turnLeft(.25)
             print "turn left"
         else:
-            forward(30)
-
+            forward(20)
+    if (distM < 5):
+        reverse (20)
     stopall()
+    time.sleep(.5)
     return 
 
 def turnRight (TSleep):
@@ -52,70 +52,61 @@ def turnLeft (TSleep):
     turn(20, 0)
     time.sleep(TSleep)
     stopall()
-    #print "moving left" 
- 	
+    #print "moving left"
+def turnSharpLeft (TSleep, speed):
+    turn(speed, 0)
+    time.sleep(TSleep)
+    stopall()
+def TimetoCount():
+    global counter 
+    counter = counter + 1 
+        
 
 try:
     state = 0
-    M= 15
+    M = 20
     S = 15
+
     while (True):
         distM = getDistance(8,8)
         if (state == 0 and distM < M):
+	    OAS(M,S)
             state = 1
         elif (state == 0):
             stopall()
         if (state == 1):
             OAS(M,S)
-            result =0
-            with picamera.PiCamera() as camera:
-                camera.resolution=(640,480)
-                camera.framerate = 32
-
-
-            with picamera.array.PiRGBArray(camera, size=(640,480)) as stream:
-
-                #capture to stream for use with opencv
-                camera.capture(stream, format='bgr')
-                image = stream.array
-                hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-
-                # define the range of the blue color in hsv
-                lower_Red = np.array([RedH_low, RedS_low, RedV_low])
-                upper_Red = np.array([255, 255, 255])
-                #  lower_Black = np.array([BlackH_low, BlackS_low, BlackV_low])
-                # upper_Black = np.array([BackH_high, BlackS_high, BlackV_high])
-                
-                # Threshold the hsv image to get only blue colors
-                Redmask = cv2.inRange(hsv, lower_Red, upper_Red)
-                # show the frame
-                #cv2.imshow("Frame", image)
-                #cv2.imshow("RedMask", Redmask)
-                numwhiteRedmask = cv2.countNonZero(Redmask)
-                print numwhiteRedmask
-                
-            
-                
-                if numwhiteRedmask> redthresh:
-                    result=1
+	    TimetoCount()
+	    if (counter is not 0):
+		    distL = getDistance(18,22)
+                    distM = getDistance(8,8)
+                    distR = getDistance(12,13)
+                    if (distR > distL):
+                        turnRight(.5)
+                    elif (distL > distR):
+                        turnLeft(.5)    
+	    if (counter == 0):
+                result = findArrow()
+                if result == 1:
+                    print "red arrow found"
+                    forward(20)
+                    time.sleep(.5)
+                    turnSharpLeft(.5, 50)
+                    forward(20)
+                    time.sleep(2)
                 else:
-                    result=0
-       
-            if result == 1:
-                print "red arrow found"
-                turnLeft(.25)
-            else:
-                distL = getDistance(18,22)
-                distM = getDistance(8,8)
-                distR = getDistance(12,13)
-                print "No arrow found"
-                if (distR > distL):
-                    turnRight(.25)                  
-                elif (distL > distR):
-                    turnLeft(.25)           
+                    distL = getDistance(18,22)
+                    distM = getDistance(8,8)
+                    distR = getDistance(12,13)
+                    print "No arrow found"
+                    if (distR > distL):
+                        turnRight(.5)                  
+                    elif (distL > distR):
+                        turnLeft(.5)
+		TimetoCount()           
         else:
             state = 0
-	
+    
         
     
 except KeyboardInterrupt:
